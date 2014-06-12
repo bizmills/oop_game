@@ -47,7 +47,8 @@ def setup_images():
             "Nick": "Nick.png",
             "Cynthia": "Cynthia.png",
             "Christian": "Christian.png",
-            "Tombstone": "Tombstone.png"
+            "Tombstone": "Tombstone.png",
+            "Chocolate": "Chocolate.png"
             }
 
     for k,v in filenames.items():

@@ -17,6 +17,10 @@ GAME_WIDTH = 10
 GAME_HEIGHT = 10
 
 #### Put class definitions here ####
+
+class Outcome():
+    lose = False
+
 class Shiv(GameElement):
     IMAGE = "Shiv"
     SOLID = False
@@ -30,7 +34,7 @@ class Shiv(GameElement):
         print player.inventory
 
 class Food(GameElement):
-    IMAGE = "Star"
+    IMAGE = "Chocolate"
     SOLID = False
 
     def interact(self, player):
@@ -38,7 +42,7 @@ class Food(GameElement):
         GAME_BOARD.draw_msg("You just acquired %s! You have %d Health" % ("food", player.HP))
 
 class Grave(GameElement):
-    IMAGE = "Heart" # To be replaced by grave stone image
+    IMAGE = "Tombstone"
     SOLID = False
 
 class Rock(GameElement):
@@ -51,7 +55,14 @@ class Rock(GameElement):
 
         if player.Smarts <= 0:
             GAME_BOARD.draw_msg("You have lost all your smarts. You have severe brain damage. You are dead.")
-            # make player die
+            grave = Grave()
+            GAME_BOARD.register(grave)
+            GAME_BOARD.set_el(player.x, player.y, grave)
+            Outcome.lose = True
+
+class Wall(GameElement):
+    IMAGE = "Wall"
+    SOLID = True
 
 class Character(GameElement):
     IMAGE = "Ghost"
@@ -130,16 +141,7 @@ class Monster(GameElement):
 
     #position
     monster_x = int(random()*GAME_WIDTH)
-    monster_y = int(random()*GAME_HEIGHT)
-
-    # existing_el = GAME_BOARD.get_el(monster_x, monster_y)
-
-    # if existing_el:
-    #     monster_x = int(random()*GAME_WIDTH)
-    #     monster_y = int(random()*GAME_HEIGHT)
-
-    # if existing_el is None:
-    #     pass
+    monster_y = int(random()*GAME_WIDTH)
 
     def interact(self, player):
         if "shiv" in player.inventory:
@@ -151,6 +153,12 @@ class Monster(GameElement):
 
             if player.HP <= 0:
                 GAME_BOARD.draw_msg("You died.")
+                # GAME_BOARD.del_el(player.x, player.y)
+                grave = Grave()
+                GAME_BOARD.register(grave)
+                GAME_BOARD.set_el(player.x, player.y, grave)
+                Outcome.lose = True
+
             if self.HP <= 0:
                 GAME_BOARD.draw_msg("You killed it! Here's some $$$...just kidding")
                 GAME_BOARD.del_el(Monster.monster_x, Monster.monster_y)
@@ -171,6 +179,8 @@ class Monster(GameElement):
 ####   End class definitions    ####
 
 def keyboard_handler():
+    if Outcome.lose == True:
+        return
 
     direction = None
 
@@ -207,23 +217,19 @@ def initialize():
 
     food = Food()
     GAME_BOARD.register(food)
-    GAME_BOARD.set_el(6,4, food)
-
-    princess = Monster()
-    GAME_BOARD.register(princess)
-    GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, princess)
+    GAME_BOARD.set_el(8,1, food)
     
     christian = Christian()
     GAME_BOARD.register(christian)
-    GAME_BOARD.set_el(5,5, christian)
+    GAME_BOARD.set_el(2,6, christian)
 
     cynthia = Cynthia()
     GAME_BOARD.register(cynthia)
-    GAME_BOARD.set_el(7,3, cynthia)
+    GAME_BOARD.set_el(5,3, cynthia)
 
     nick = Nick()
     GAME_BOARD.register(nick)
-    GAME_BOARD.set_el(8,2, nick)
+    GAME_BOARD.set_el(7,7, nick)
     
     global PLAYER
     PLAYER = Character()
@@ -232,10 +238,16 @@ def initialize():
     print PLAYER 
 
     rock_positions = [
+    (1, 1),
     (2, 1),
     (1, 2),
     (3, 2),
-    (1, 1)
+    (4, 3),
+    (5, 7),
+    (1, 2),
+    (2, 4),
+    (7, 1),
+    (7, 5)
     ]
 
     rocks = []
@@ -244,3 +256,64 @@ def initialize():
         GAME_BOARD.register(rock)
         GAME_BOARD.set_el(pos[0], pos[1], rock)
         rocks.append(rock)
+
+    wall_positions = [
+    #left wall
+    (0, 0),
+    (0, 1),
+    (0, 2),
+    (0, 3),
+    (0, 4),
+    (0, 5),
+    (0, 6),
+    (0, 7),
+    (0, 8),
+    (0, 9),
+    #right wall
+    (9, 0),
+    (9, 1),
+    (9, 2),
+    (9, 3),
+    (9, 4),
+    (9, 5),
+    (9, 6),
+    (9, 7),
+    (9, 8),
+    (9, 9),
+    #top wall
+    (1, 0),
+    (2, 0),
+    (3, 0),
+    (4, 0),
+    (5, 0),
+    (6, 0),
+    (7, 0),
+    (8, 0),
+    #bottom wall
+    (1, 9),
+    (2, 9),
+    (3, 9),
+    (4, 9),
+    (5, 9),
+    (6, 9),
+    (7, 9),
+    (8, 9)
+    ]
+
+    walls = []
+    for pos in wall_positions:
+        wall = Wall()
+        GAME_BOARD.register(wall)
+        GAME_BOARD.set_el(pos[0], pos[1], wall)
+        walls.append(wall)
+
+    princess = Monster()
+    GAME_BOARD.register(princess)
+
+    existing_el = GAME_BOARD.get_el(Monster.monster_x, Monster.monster_y)
+    while existing_el != None:
+        Monster.monster_x = int(random()*GAME_WIDTH)
+        Monster.monster_y = int(random()*GAME_HEIGHT)
+        existing_el = GAME_BOARD.get_el(Monster.monster_x, Monster.monster_y)
+    if existing_el is None:
+        GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, princess)
