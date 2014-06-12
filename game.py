@@ -61,6 +61,10 @@ class Monster(GameElement):
     HP = 100
     Strength = int(random() * 50)
 
+    #position
+    monster_x = int(random()*GAME_WIDTH)
+    monster_y = int(random()*GAME_HEIGHT)
+
     def interact(self, player):
         if "shiv" in player.inventory:
             damage_to_monster = player.Strength
@@ -73,10 +77,10 @@ class Monster(GameElement):
                 GAME_BOARD.draw_msg("You died.")
             if self.HP <= 0:
                 GAME_BOARD.draw_msg("You killed it! Here's some $$$...just kidding")
-                GAME_BOARD.del_el(4,4)
+                GAME_BOARD.del_el(Monster.monster_x, Monster.monster_y)
                 grave = Grave()
                 GAME_BOARD.register(grave)
-                GAME_BOARD.set_el(4,4, grave)
+                GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, grave)
         else:
             GAME_BOARD.draw_msg("The monster laughs at your lack of a weapon.")
 
@@ -124,6 +128,11 @@ def initialize():
     GAME_BOARD.register(shiv)
     GAME_BOARD.set_el(3,1, shiv)
 
+    princess = Monster()
+
+    GAME_BOARD.register(princess)
+    GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, princess)
+
     global PLAYER
     PLAYER = Character()
     GAME_BOARD.register(PLAYER)
@@ -149,7 +158,3 @@ def initialize():
 
     for rock in rocks:
         print rock
-
-    princess = Monster()
-    GAME_BOARD.register(princess)
-    GAME_BOARD.set_el(4,4, princess)
