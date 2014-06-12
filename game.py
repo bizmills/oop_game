@@ -28,6 +28,7 @@ class Shiv(GameElement):
         player.inventory["shiv"] = player.inventory.get("shiv", 0) + 1
         GAME_BOARD.draw_msg("You just acquired a %s! You have %d items!"%("shiv", len(player.inventory)))
         print player.inventory
+
 class Food(GameElement):
     IMAGE = "Star"
     SOLID = False
@@ -39,9 +40,18 @@ class Food(GameElement):
 class Grave(GameElement):
     IMAGE = "Heart" # To be replaced by grave stone image
     SOLID = False
+
 class Rock(GameElement):
     IMAGE = "Rock"
     SOLID = True
+
+    def interact(self, player):
+        player.Smarts -= 50
+        GAME_BOARD.draw_msg("You hit your head on the rock. That ain't smart. You lose %d smarts and you have %s intelligence left." % (50, player.Smarts))
+
+        if player.Smarts <= 0:
+            GAME_BOARD.draw_msg("You have lost all your smarts. You have severe brain damage. You are dead.")
+            # make player die
 
 class Character(GameElement):
     IMAGE = "Ghost"
@@ -121,6 +131,15 @@ class Monster(GameElement):
     #position
     monster_x = int(random()*GAME_WIDTH)
     monster_y = int(random()*GAME_HEIGHT)
+
+    # existing_el = GAME_BOARD.get_el(monster_x, monster_y)
+
+    # if existing_el:
+    #     monster_x = int(random()*GAME_WIDTH)
+    #     monster_y = int(random()*GAME_HEIGHT)
+
+    # if existing_el is None:
+    #     pass
 
     def interact(self, player):
         if "shiv" in player.inventory:
@@ -216,8 +235,7 @@ def initialize():
     (2, 1),
     (1, 2),
     (3, 2),
-    (1, 1),
-    (2, 3)
+    (1, 1)
     ]
 
     rocks = []
@@ -226,8 +244,3 @@ def initialize():
         GAME_BOARD.register(rock)
         GAME_BOARD.set_el(pos[0], pos[1], rock)
         rocks.append(rock)
-
-    rocks[-1].SOLID = False
-
-    for rock in rocks:
-        print rock
