@@ -28,6 +28,14 @@ class Shiv(GameElement):
         player.inventory["shiv"] = player.inventory.get("shiv", 0) + 1
         GAME_BOARD.draw_msg("You just acquired a %s! You have %d items!"%("shiv", len(player.inventory)))
         print player.inventory
+class Food(GameElement):
+    IMAGE = "Star"
+    SOLID = False
+
+    def interact(self, player):
+        player.HP += 50
+        GAME_BOARD.draw_msg("You just acquired %s! You have %d Health" % ("food", player.HP))
+
 class Grave(GameElement):
     IMAGE = "Heart" # To be replaced by grave stone image
     SOLID = False
@@ -71,7 +79,7 @@ class Monster(GameElement):
             damage_to_player = self.Strength
             self.HP -= damage_to_monster
             player.HP -= damage_to_player
-            GAME_BOARD.draw_msg("You did %d damage and the monster did %d damage! You have %d health remaining" % (damage_to_monster, damage_to_player, player.HP))
+            GAME_BOARD.draw_msg("You did %d damage and the monster did %d damage! The monster has %d and you have %d health remaining." % (damage_to_monster, damage_to_player, self.HP, player.HP))
 
             if player.HP <= 0:
                 GAME_BOARD.draw_msg("You died.")
@@ -127,6 +135,10 @@ def initialize():
     shiv = Shiv()
     GAME_BOARD.register(shiv)
     GAME_BOARD.set_el(3,1, shiv)
+
+    food = Food()
+    GAME_BOARD.register(food)
+    GAME_BOARD.set_el(6,4, food)
 
     princess = Monster()
 
