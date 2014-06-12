@@ -44,9 +44,10 @@ class Rock(GameElement):
     SOLID = True
 
 class Character(GameElement):
-    IMAGE = "Horns"
+    IMAGE = "Ghost"
     HP = 100
     Strength = int(random() * 100)
+    Smarts = int(random() *100)
 
     def next_pos(self, direction):
         if direction == "up":
@@ -62,6 +63,54 @@ class Character(GameElement):
     def __init__(self):
         GameElement.__init__(self)
         self.inventory = {}
+
+class Christian(GameElement):
+    IMAGE = "Christian"
+    SOLID = False
+
+    def interact(self, player):
+        player.inventory["christian"] = player.inventory.get("christian", 0) + 1
+        print player.inventory
+
+        added_smarts = int(random() * 1000)
+        player.Smarts += added_smarts
+
+        if player.Smarts >= 2000:
+            GAME_BOARD.draw_msg("You win! You have all the Smarts!")
+        else:
+            GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Christian", player.Smarts))
+
+class Cynthia(GameElement):
+    IMAGE = "Cynthia"
+    SOLID = False
+    def interact(self, player):
+        player.inventory["cynthia"] = player.inventory.get("cynthia", 0) + 1
+        print player.inventory
+
+        added_smarts = int(random() * 1000)
+        player.Smarts += added_smarts
+
+        if player.Smarts >= 2000:
+            GAME_BOARD.draw_msg("You win! You have all the Smarts!")
+        else:
+            GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Cynthia", player.Smarts))
+
+
+class Nick(GameElement):
+    IMAGE = "Nick"
+    SOLID = False
+    def interact(self, player):
+        player.inventory["nick"] = player.inventory.get("nick", 0) + 1
+        print player.inventory
+
+        added_smarts = int(random() * 1000)
+        player.Smarts += added_smarts
+
+        if player.Smarts >= 2000:
+            GAME_BOARD.draw_msg("You win! You have all the Smarts!")
+        else:
+            GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Nick", player.Smarts))
+
 
 class Monster(GameElement):
     IMAGE = "Princess"
@@ -91,6 +140,7 @@ class Monster(GameElement):
                 GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, grave)
         else:
             GAME_BOARD.draw_msg("The monster laughs at your lack of a weapon.")
+
 
 #This may work eventually to delay an image
             # time.sleep(10)
@@ -141,10 +191,21 @@ def initialize():
     GAME_BOARD.set_el(6,4, food)
 
     princess = Monster()
-
     GAME_BOARD.register(princess)
     GAME_BOARD.set_el(Monster.monster_x, Monster.monster_y, princess)
+    
+    christian = Christian()
+    GAME_BOARD.register(christian)
+    GAME_BOARD.set_el(5,5, christian)
 
+    cynthia = Cynthia()
+    GAME_BOARD.register(cynthia)
+    GAME_BOARD.set_el(7,3, cynthia)
+
+    nick = Nick()
+    GAME_BOARD.register(nick)
+    GAME_BOARD.set_el(8,2, nick)
+    
     global PLAYER
     PLAYER = Character()
     GAME_BOARD.register(PLAYER)
