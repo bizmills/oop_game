@@ -95,7 +95,7 @@ class Christian(GameElement):
         added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+        if all (instructors in player.inventory for instructors in ("christian", "nick", "cynthia")):
             GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
 
         elif player.Smarts >= 200:
@@ -113,7 +113,7 @@ class Cynthia(GameElement):
         added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+        if all (instructors in player.inventory for instructors in ("christian", "nick", "cynthia")):
             GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
 
         elif player.Smarts >= 200:
@@ -132,7 +132,7 @@ class Nick(GameElement):
         added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+        if all (instructors in player.inventory for instructors in ("christian", "nick", "cynthia")):
             GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
 
         elif player.Smarts >= 200:
