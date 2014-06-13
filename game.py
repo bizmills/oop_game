@@ -17,7 +17,6 @@ GAME_WIDTH = 10
 GAME_HEIGHT = 10
 
 #### Put class definitions here ####
-
 class Outcome():
     lose = False
 
@@ -68,7 +67,7 @@ class Character(GameElement):
     IMAGE = "Ghost"
     HP = 100
     Strength = int(random() * 100)
-    Smarts = int(random() *100)
+    Smarts = int(random() *10)
 
     def next_pos(self, direction):
         if direction == "up":
@@ -93,10 +92,13 @@ class Christian(GameElement):
         player.inventory["christian"] = player.inventory.get("christian", 0) + 1
         print player.inventory
 
-        added_smarts = int(random() * 1000)
+        added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if player.Smarts >= 2000:
+        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+            GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
+
+        elif player.Smarts >= 200:
             GAME_BOARD.draw_msg("You win! You have all the Smarts!")
         else:
             GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Christian", player.Smarts))
@@ -108,10 +110,13 @@ class Cynthia(GameElement):
         player.inventory["cynthia"] = player.inventory.get("cynthia", 0) + 1
         print player.inventory
 
-        added_smarts = int(random() * 1000)
+        added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if player.Smarts >= 2000:
+        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+            GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
+
+        elif player.Smarts >= 200:
             GAME_BOARD.draw_msg("You win! You have all the Smarts!")
         else:
             GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Cynthia", player.Smarts))
@@ -124,10 +129,13 @@ class Nick(GameElement):
         player.inventory["nick"] = player.inventory.get("nick", 0) + 1
         print player.inventory
 
-        added_smarts = int(random() * 1000)
+        added_smarts = int(random() * 100)
         player.Smarts += added_smarts
 
-        if player.Smarts >= 2000:
+        if ("christian" and "cynthia" and "nick") in player.inventory.keys():
+            GAME_BOARD.draw_msg("You win Hackbright! Congratulations!")
+
+        elif player.Smarts >= 200:
             GAME_BOARD.draw_msg("You win! You have all the Smarts!")
         else:
             GAME_BOARD.draw_msg("You just acquired %d smarts and %s! You have %d intelligence. You need more instructor help! Keep asking questions!" % (added_smarts, "Nick", player.Smarts))
@@ -198,6 +206,15 @@ def keyboard_handler():
         next_x = next_location[0]
         next_y = next_location[1]
 
+        if 0 > next_x:
+            next_x = 0
+        elif next_x >= GAME_WIDTH:
+            next_x = 9
+        elif 0 > next_y: 
+            next_y = 0
+        elif next_y >= GAME_HEIGHT:
+            next_y = 9
+
         existing_el = GAME_BOARD.get_el(next_x, next_y)
 
         if existing_el:
@@ -209,7 +226,7 @@ def keyboard_handler():
 
 def initialize():
     """Put game initialization code here"""
-    GAME_BOARD.draw_msg("Linna and Biz made this:)")
+    GAME_BOARD.draw_msg("Choose your path: Increase your Smarts or Shank the Princess.")
 
     shiv = Shiv()
     GAME_BOARD.register(shiv)
@@ -257,55 +274,55 @@ def initialize():
         GAME_BOARD.set_el(pos[0], pos[1], rock)
         rocks.append(rock)
 
-    wall_positions = [
-    #left wall
-    (0, 0),
-    (0, 1),
-    (0, 2),
-    (0, 3),
-    (0, 4),
-    (0, 5),
-    (0, 6),
-    (0, 7),
-    (0, 8),
-    (0, 9),
-    #right wall
-    (9, 0),
-    (9, 1),
-    (9, 2),
-    (9, 3),
-    (9, 4),
-    (9, 5),
-    (9, 6),
-    (9, 7),
-    (9, 8),
-    (9, 9),
-    #top wall
-    (1, 0),
-    (2, 0),
-    (3, 0),
-    (4, 0),
-    (5, 0),
-    (6, 0),
-    (7, 0),
-    (8, 0),
-    #bottom wall
-    (1, 9),
-    (2, 9),
-    (3, 9),
-    (4, 9),
-    (5, 9),
-    (6, 9),
-    (7, 9),
-    (8, 9)
-    ]
+    # wall_positions = [
+    # #left wall
+    # (0, 0),
+    # (0, 1),
+    # (0, 2),
+    # (0, 3),
+    # (0, 4),
+    # (0, 5),
+    # (0, 6),
+    # (0, 7),
+    # (0, 8),
+    # (0, 9),
+    # #right wall
+    # (9, 0),
+    # (9, 1),
+    # (9, 2),
+    # (9, 3),
+    # (9, 4),
+    # (9, 5),
+    # (9, 6),
+    # (9, 7),
+    # (9, 8),
+    # (9, 9),
+    # #top wall
+    # (1, 0),
+    # (2, 0),
+    # (3, 0),
+    # (4, 0),
+    # (5, 0),
+    # (6, 0),
+    # (7, 0),
+    # (8, 0),
+    # #bottom wall
+    # (1, 9),
+    # (2, 9),
+    # (3, 9),
+    # (4, 9),
+    # (5, 9),
+    # (6, 9),
+    # (7, 9),
+    # (8, 9)
+    # ]
 
-    walls = []
-    for pos in wall_positions:
-        wall = Wall()
-        GAME_BOARD.register(wall)
-        GAME_BOARD.set_el(pos[0], pos[1], wall)
-        walls.append(wall)
+    # walls = []
+    # for pos in wall_positions:
+    #     wall = Wall()
+    #     GAME_BOARD.register(wall)
+    #     GAME_BOARD.set_el(pos[0], pos[1], wall)
+    #     walls.append(wall)
 
     princess = Monster()
     GAME_BOARD.register(princess)
